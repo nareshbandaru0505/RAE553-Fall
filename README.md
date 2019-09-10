@@ -92,4 +92,3 @@ with open(upload, 'r') as f:
  ftp.storlines("STOR " + 'upload', f) 
  
  
- 
