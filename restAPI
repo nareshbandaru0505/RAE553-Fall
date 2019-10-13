@@ -1,1 +1,29 @@
+# Below python script is useful to create simple REST api using flask. this API will receive the name as the input and return the same as output
+# steps as below:
 
+#Flask and Flask-RESTful are installed using pip install command
+
+# Flask class is imported from flask module
+from flask import Flask
+
+# Resource, Api classes imported from flask_restful module inorder to create the first rest api
+from flask_restful import Resource, Api
+
+# Flask application instance is created using below command
+app = Flask(__name__)
+
+#Api application instance is created using below command
+api = Api(app)
+
+#In general API works with resources and resoruces should be defined as class. Student is created as Resource class and
+# definited to return the value as student:'input value'
+class Student(Resource):
+    def get(self, name):
+        return {'student': name}
+
+# Configured newly created resource Student accessible throuugh API
+api.add_resource(Student, '/student/<string:name>')
+
+# runt the application
+if __name__ == '__main__':
+    app.run()
