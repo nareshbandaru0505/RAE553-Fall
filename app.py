@@ -1,7 +1,7 @@
 # Flask class is imported from flask module
 from flask import Flask, request
 # abort, Resource, Api classes imported from flask_restful module inorder to create the first rest api
-from flask_restful import Resource, Api, abort
+from flask_restful import Resource, Api, abort, reqparse
 
 #import JWT,jwt_required, current_identity from flask_jwt module which is used for authentication
 from flask_jwt import JWT, jwt_required, current_identity
@@ -24,6 +24,10 @@ jwt = JWT(app, authenticate, identity)
 #defining total items
 items = {}
 
+parser = reqparse.RequestParser()
+#adding price as argument
+parser.add_argument('price', type=float,required=True, help='This field cannot be left blank')
+
 # generally API works with resources and resoruces should be defined as class. item and itemList is created as Resource class
 # Resource item definition
 # for GET and DELETE method, verifying if the  value exists. if doesnt exists, report error code 404 and print itemX doesnt exist message line 14
@@ -43,9 +47,12 @@ class item(Resource):
     #call the identity function in our endpoints using @jwt_required() decorator
     @jwt_required()
     def put(self, name):
-        items[name] = {'price' : request.form['price'] }
-        return {name: items[name]}
-
+        data = parser.parse_args()
+        task = {'name': name, 'price': data['price']}
+        #adding new argumented value to total_items
+        items[name] = task
+        return task
+    
     # POST method to create a new endpoint with concrete price value as requested.
     # if the requted name already exist, it will abort and  print an error with error code 403
     # call the identity function in our endpoints using @jwt_required() decorator
