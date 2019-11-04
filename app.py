@@ -24,10 +24,6 @@ jwt = JWT(app, authenticate, identity)
 #defining total items
 items = {}
 
-parser = reqparse.RequestParser()
-#adding price as argument
-parser.add_argument('price', type=float,required=True, help='This field cannot be left blank')
-
 # generally API works with resources and resoruces should be defined as class. item and itemList is created as Resource class
 # Resource item definition
 # for GET and DELETE method, verifying if the  value exists. if doesnt exists, report error code 404 and print itemX doesnt exist message line 14
@@ -47,9 +43,14 @@ class item(Resource):
     #call the identity function in our endpoints using @jwt_required() decorator
     @jwt_required()
     def put(self, name):
+        #parsing the given data based on argument defined. argumented value is data['price']
+        parser = reqparse.RequestParser()
+        #adding price as argument
+        parser.add_argument('price', type=float,required=True, help='This field cannot be left blank')
+        #defining data 
         data = parser.parse_args()
         task = {'name': name, 'price': data['price']}
-        #adding new argumented value to total_items
+        #adding new argumented value to total items
         items[name] = task
         return task
     
