@@ -2,20 +2,12 @@
 from werkzeug.security import safe_str_cmp
 from user import User
 
-#creating Users list
-users = [
-    User(1, 'naresh', 'naresh1234'),
-    User(2, 'bandaru', 'bandaru1234'),
-]
-
-username_table = {u.username: u for u in users}
-userid_table = {u.id: u for u in users}
-
+# authenticate
 def authenticate(username, password):
-    user = username_table.get(username, None)
+    user = User.find_by_username(username)
     if user and safe_str_cmp(user.password, password):
         return user
-
+#identify
 def identity(payload):
     user_id = payload['identity']
-    return userid_table.get(user_id, None)
+    return User.find_by_id(user_id)
